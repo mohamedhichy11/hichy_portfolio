@@ -301,16 +301,38 @@
             </div>
         </div>
         
-        <!-- Animated code lines decoration -->
-        <div class="absolute bottom-0 left-0 right-0 h-16 sm:h-20 overflow-hidden opacity-10">
-            <div class="absolute inset-0 flex items-center justify-center">
-                <code class="text-xs font-mono whitespace-nowrap text-[#8b949e] animate-marquee">
-                    // FullStack Development • API Design • Database Architecture • CI/CD Pipelines • 
-                    // Cloud Solutions • Microservices • Automation Scripts • Performance Optimization •
-                    // Web Applications • Mobile Responsive • UX/UI Principles • DevOps Practices •
-                </code>
-            </div>
+       <div class="absolute bottom-0 left-0 right-0 h-16 sm:h-20 overflow-hidden opacity-10">
+    <div class="absolute inset-0 flex items-center justify-start">
+        <div class="flex space-x-8 animate-sequential-marquee">
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">// FullStack Development •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">API Design •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Database Architecture •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">CI/CD Pipelines •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Cloud Solutions •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Microservices •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Automation Scripts •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Performance Optimization •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Web Applications •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Mobile Responsive •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">UX/UI Principles •</code>
+            <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">DevOps Practices •</code>
         </div>
+    </div>
+</div>
+
+<style>
+    @keyframes sequential-marquee {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-100% - 2rem));
+        }
+    }
+    .animate-sequential-marquee {
+        animation: sequential-marquee 30s linear infinite;
+    }
+</style>
     </section>
 
     <!-- About Section -->
