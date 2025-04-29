@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Already good in your head section -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Replace your current viewport meta tag with this -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mohamed Hichy | Full Stack Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='black'/><text x='50' y='60' font-size='60' font-family='monospace' fill='white' text-anchor='middle'>{}</text></svg>">
@@ -117,6 +118,51 @@
             .tech-circle {
                 @apply w-16 h-16 rounded-full flex items-center justify-center bg-[#21262d] border border-code-border text-xl font-mono hover:border-primary transition-all;
             }
+             /* Improved responsive base styles */
+    html {
+        @apply text-[14px] sm:text-[16px];
+    }
+    
+    /* Better mobile spacing */
+    .section-title {
+        @apply text-2xl sm:text-3xl;
+    }
+    
+    /* More responsive cards */
+    .card {
+        @apply p-4 sm:p-6;
+    }
+    
+    /* Better mobile project images */
+    .project-image {
+        @apply h-36 sm:h-48;
+    }
+    
+    /* Mobile-first terminal lines */
+    .terminal-line {
+        @apply text-xs sm:text-sm;
+    }
+    
+    /* Better mobile tech circles */
+    .tech-circle {
+        @apply w-12 h-12 sm:w-16 sm:h-16;
+    }
+    .code-card {
+        @apply bg-code-bg rounded-lg p-4 sm:p-6 border border-code-border overflow-x-auto;
+    }
+    
+    .code-header {
+        @apply flex flex-wrap items-center gap-2 mb-4;
+    }
+    
+    .code-badge {
+        @apply px-2 py-1 text-xs sm:text-sm rounded-md font-mono;
+    }
+    
+    .tech-tag {
+        @apply bg-[#21262d] text-[#c9d1d9] px-2 py-1 text-xs sm:text-sm rounded-md;
+    }
+            
         }
     </style>
 </head>
@@ -257,38 +303,14 @@
         
         <!-- Animated code lines decoration -->
         <div class="absolute bottom-0 left-0 right-0 h-16 sm:h-20 overflow-hidden opacity-10">
-            <div class="absolute inset-0 flex items-center justify-start">
-                <div class="flex space-x-8 animate-sequential-marquee">
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">// FullStack Development •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">API Design •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Database Architecture •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">CI/CD Pipelines •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Cloud Solutions •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Microservices •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Automation Scripts •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Performance Optimization •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Web Applications •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">Mobile Responsive •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">UX/UI Principles •</code>
-                    <code class="text-xs font-mono whitespace-nowrap text-[#8b949e]">DevOps Practices •</code>
-                </div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <code class="text-xs font-mono whitespace-nowrap text-[#8b949e] animate-marquee">
+                    // FullStack Development • API Design • Database Architecture • CI/CD Pipelines • 
+                    // Cloud Solutions • Microservices • Automation Scripts • Performance Optimization •
+                    // Web Applications • Mobile Responsive • UX/UI Principles • DevOps Practices •
+                </code>
             </div>
         </div>
-        
-        <style>
-            @keyframes sequential-marquee {
-                0% {
-                    transform: translateX(0);
-                }
-                100% {
-                    transform: translateX(calc(-100% - 2rem));
-                }
-            }
-            .animate-sequential-marquee {
-                animation: sequential-marquee 30s linear infinite;
-            }
-        </style>
-
     </section>
 
     <!-- About Section -->
