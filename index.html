@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Already good in your head section -->
-   
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mohamed Hichy | Full Stack Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -119,180 +118,9 @@
                 @apply w-16 h-16 rounded-full flex items-center justify-center bg-[#21262d] border border-code-border text-xl font-mono hover:border-primary transition-all;
             }
         }
-        /* Base mobile styles */
-@media (max-width: 640px) {
-  /* General adjustments */
-  body {
-    font-size: 14px;
-  }
-  
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  /* Header/Navigation */
-  #mobile-menu {
-    display: none;
-  }
-  
-  #mobile-menu-button {
-    display: block;
-  }
-  
-  .desktop-nav {
-    display: none;
-  }
-  
-  /* Hero section */
-  .hero-content {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-    text-align: center;
-  }
-  
-  .hero-title {
-    font-size: 2rem;
-    line-height: 2.5rem;
-  }
-  
-  .hero-subtitle {
-    font-size: 1rem;
-  }
-  
-  /* Skills section */
-  .grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .card {
-    padding: 1.5rem;
-  }
-  
-  /* Projects section */
-  #projects .grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .project-image {
-    height: auto;
-  }
-  
-  /* Experience section */
-  .code-card {
-    padding: 1rem;
-  }
-  
-  .code-line {
-    flex-wrap: wrap;
-  }
-  
-  /* Certifications section */
-  #certifications .grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .certification-card {
-    padding: 1.5rem;
-  }
-  
-  /* Contact section */
-  #contact .grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .terminal-line {
-    flex-wrap: wrap;
-  }
-  
-  /* Footer */
-  .footer-links {
-    flex-direction: column;
-    gap: 1rem;
-  }
-}
-
-/* Medium screens (tablets) */
-@media (min-width: 641px) and (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  #mobile-menu-button {
-    display: none;
-  }
-  
-  .desktop-nav {
-    display: flex;
-  }
-}
-
-input, textarea, select {
-  font-size: 16px; /* Prevent iOS zoom */
-  padding: 0.75rem;
-}
-button, a, input, .skill-badge {
-  min-height: 44px;
-  min-width: 44px;
-}
-/* For your technical skills cards */
-@media (max-width: 640px) {
-  .skill-badge {
-    padding: 0.5rem;
-    font-size: 0.875rem;
-  }
-  
-  .certification-item {
-    font-size: 0.875rem;
-  }
-  
-  .terminal-prompt {
-    margin-right: 0.5rem;
-  }
-  
-  /* Ensure code blocks don't overflow */
-  .code-card {
-    overflow-x: auto;
-  }
-}
-
-
-
-.light-effect {
-  position: fixed;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(68, 255, 11, 0.2) 0%, transparent 70%);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: -1;
-  mix-blend-mode: screen;
-}
-
-/* Add glass effect to your existing cards */
-.card {
-  backdrop-filter: blur(10px);
-  background: rgba(13, 17, 23, 0.7) !important;
-}
-/* Add to your existing styles */
-header {
-  backdrop-filter: blur(10px);
-  background: rgba(22, 27, 34, 0.8) !important;
-}
-
-#hero {
-  backdrop-filter: blur(5px);
-}
-
-#about, #projects, #experience, #contact {
-  backdrop-filter: blur(5px);
-}
     </style>
 </head>
 <body class="bg-dark text-light font-sans antialiased">
-    <div class="light-effect" id="light"></div>
     <div class="fixed inset-0 overflow-hidden -z-10">
         <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900/80 to-darker"></div>
         <div class="absolute top-0 left-0 w-full h-full opacity-10">
@@ -324,7 +152,19 @@ header {
             </button>
         </div>
         
-       
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-[#161b22] border-t border-[#30363d]" id="mobile-menu">
+            <div class="container mx-auto px-4 py-2">
+                <ul class="flex flex-col space-y-2">
+                    <li><a href="#about" class="block py-2 hover:text-primary transition-all duration-300 font-mono text-sm">about()</a></li>
+                    <li><a href="#skills" class="block py-2 hover:text-primary transition-all duration-300 font-mono text-sm">skills()</a></li>
+                    <li><a href="#projects" class="block py-2 hover:text-primary transition-all duration-300 font-mono text-sm">projects()</a></li>
+                    <li><a href="#experience" class="block py-2 hover:text-primary transition-all duration-300 font-mono text-sm">experience()</a></li>
+                    <li><a href="#contact" class="block py-2 hover:text-primary transition-all duration-300 font-mono text-sm">contact()</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
     
     <!-- Hero Section -->
     <section class="relative py-16 sm:py-24 overflow-hidden bg-gradient-to-b from-[#0d1117] to-[#161b22]" id="hero">
@@ -448,6 +288,7 @@ header {
                 animation: sequential-marquee 30s linear infinite;
             }
         </style>
+
     </section>
 
     <!-- About Section -->
@@ -1436,24 +1277,6 @@ header {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
-
-       // Light follow effect
-const light = document.getElementById('light');
-
-document.addEventListener('mousemove', (e) => {
-  const x = e.clientX;
-  const y = e.clientY;
-
-  light.style.left = `${x}px`;
-  light.style.top = `${y}px`;
-  light.style.opacity = 1;
-});
-
-document.addEventListener('mouseleave', () => {
-  light.style.opacity = 0;
-});
-
-// Rest of your existing JavaScript...
     </script>
 </body>
 </html>
