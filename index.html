@@ -1594,5 +1594,658 @@
 
 })();
 </script>
+
+<!-- ─── MULTILINGUAL SYSTEM ──────────────────── -->
+<style>
+  /* Lang switcher in navbar */
+  .lang-switcher {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(79,142,247,0.08); border: 1px solid rgba(79,142,247,0.2);
+    border-radius: 100px; padding: 3px 6px; margin-left: 12px;
+  }
+  .lang-btn {
+    font-family: 'Fira Code', monospace; font-size: 0.7rem; font-weight: 600;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-secondary); padding: 4px 9px; border-radius: 100px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .lang-btn.active { background: var(--accent-primary); color: white; }
+  .lang-btn:hover:not(.active) { color: var(--accent-primary); }
+
+  /* RTL support */
+  body.rtl { direction: rtl; text-align: right; }
+  body.rtl .nav-inner { flex-direction: row-reverse; }
+  body.rtl .nav-links { flex-direction: row-reverse; }
+  body.rtl .hero-inner { direction: rtl; }
+  body.rtl .hero-content { text-align: right; }
+  body.rtl .hero-ctas { flex-direction: row-reverse; }
+  body.rtl .hero-tech-stack { flex-direction: row-reverse; }
+  body.rtl .about-grid { direction: rtl; }
+  body.rtl .timeline-item { padding-left: 0; padding-right: 56px; }
+  body.rtl .timeline-line { left: auto; right: 16px; }
+  body.rtl .timeline-dot { left: auto; right: 6px; }
+  body.rtl .timeline-points li { padding-left: 0; padding-right: 20px; }
+  body.rtl .timeline-points li::before { left: auto; right: 0; }
+  body.rtl .timeline-item:hover .timeline-card { transform: translateX(-8px); }
+  body.rtl .edu-item:hover { transform: translateX(-6px); }
+  body.rtl .code-snippet { text-align: left; direction: ltr; }
+  body.rtl .footer-socials { flex-direction: row-reverse; }
+  body.rtl .terminal-title { margin-left: 0; margin-right: auto; }
+  body.rtl .contact-item { flex-direction: row-reverse; }
+  body.rtl #mobile-drawer { right: auto; left: -300px; border-left: none; border-right: 1px solid var(--border-accent); }
+  body.rtl #mobile-drawer.open { left: 0; right: auto; }
+
+  /* Translation loading overlay */
+  .translate-spinner {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9000;
+    background: var(--bg-elevated); border: 1px solid var(--border-accent);
+    border-radius: var(--radius-md); padding: 12px 18px;
+    font-family: 'Fira Code', monospace; font-size: 0.75rem; color: var(--accent-primary);
+    display: none; align-items: center; gap: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .translate-spinner.show { display: flex; }
+  .spinner-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--accent-primary);
+    animation: spinDot 1.2s ease-in-out infinite;
+  }
+  @keyframes spinDot {
+    0%,100% { transform: scale(0.4); opacity: 0.3; }
+    50% { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<div class="translate-spinner" id="translate-spinner">
+  <div class="spinner-dot"></div>
+  <span id="translate-msg">translating...</span>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ─── TRANSLATIONS DICTIONARY ──────────────
+  // All static text keyed by [lang][key]
+  const T = {
+    en: {
+      // Nav
+      'nav.about': 'about()',
+      'nav.skills': 'skills()',
+      'nav.projects': 'projects()',
+      'nav.experience': 'experience()',
+      'nav.certs': 'certs()',
+      'nav.contact': 'contact()',
+      // Hero
+      'hero.badge': 'Open to opportunities',
+      'hero.desc': 'I architect digital experiences with clean, efficient code and automate workflows to create seamless, scalable solutions.',
+      'hero.cta.contact': 'contact_me()',
+      'hero.cta.projects': 'view_projects()',
+      'hero.cta.cv': 'download_cv()',
+      // About
+      'about.eyebrow': '01 / about',
+      'about.title': 'about_me()',
+      'about.subtitle': 'Combining technical expertise with creative problem-solving to build things that matter.',
+      'about.card1.title': 'professional_profile()',
+      'about.card1.body': 'As a Full Stack Developer with expertise in both traditional coding and innovative low-code solutions, I architect digital experiences that blend technical excellence with operational efficiency.',
+      'about.quote': '"I transform complex requirements into elegant solutions that balance technical robustness with business value, ensuring systems are maintainable, efficient, and future-proof."',
+      'about.card2.title': 'education_credentials()',
+      'about.edu1.degree': 'DIPLÔME DE TECHNICIEN SPÉCIALISÉ',
+      'about.edu1.field': 'Offshoring and IT Communication Technologies',
+      'about.edu2.degree': 'BACCALAURÉAT EN SCIENCES PHYSIQUE',
+      'about.edu2.field': 'Physical Sciences Concentration with honors',
+      'about.lang.title': 'language_proficiency()',
+      'about.focus.title': 'current_focus()',
+      'about.focus.body': 'Building advanced AI-driven automation solutions with n8n, optimizing workflows, and improving English for seamless global teamwork.',
+      'about.contact.title': 'contact_info()',
+      'about.available': 'Available for work',
+      'about.linkedin': 'linkedin_profile() →',
+      // Skills
+      'skills.eyebrow': '02 / skills',
+      'skills.title': 'technical_skills()',
+      'skills.subtitle': 'My comprehensive toolkit for building modern, scalable solutions.',
+      // Projects
+      'projects.eyebrow': '03 / projects',
+      'projects.title': 'featured_projects()',
+      'projects.subtitle': 'A selection of work that showcases what I build and how I think.',
+      'projects.view': 'view_details()',
+      'projects.p1.desc': 'Designed UI/UX with Figma for a marketplace platform similar to Avito.ma with full interactive prototyping.',
+      'projects.p2.desc': 'A website displaying movies, showtimes, and online ticket booking with cinema advertisements.',
+      'projects.p3.desc': 'Mobile app for managing patients, appointments, and medical staff schedules with real-time updates.',
+      'projects.p4.desc': 'Online store for video games with order management and integrated online payment gateway.',
+      'projects.p5.desc': 'Automated workflow for tracking shipping containers with data collection, status updates, and AI-generated summaries.',
+      'projects.p6.desc': 'Script to automate online ticket booking with form filling and automatic validation using browser automation.',
+      // Experience
+      'exp.eyebrow': '04 / experience',
+      'exp.title': 'work_history()',
+      'exp.subtitle': 'My professional journey through the tech landscape.',
+      'exp.current': '● current_position',
+      'exp.past': 'past_position',
+      'exp.intern': 'internship',
+      'exp.crescents.p1': 'Conception et développement de sites web modernes, responsives et performants',
+      'exp.crescents.p2': 'Développement avec React, Next.js, Tailwind CSS et bases de données',
+      'exp.crescents.p3': "Intégration d'API et optimisation de l'expérience utilisateur",
+      'exp.cmh.p1': 'Creation of HTML/CSS/JS templates for email campaigns',
+      'exp.cmh.p2': 'Email domain management and configuration',
+      'exp.cmh.p3': 'Developed responsive email templates',
+      'exp.cmh.p4': 'Automated email workflows at scale',
+      'exp.cmh.p5': 'Optimized domain deliverability',
+      'exp.med.p1': 'Hospital management system development',
+      'exp.med.p2': 'Developed patient management modules',
+      'exp.med.p3': 'Implemented RESTful APIs for data access',
+      'exp.med.p4': 'Conducted unit testing and QA',
+      // Certs
+      'cert.eyebrow': '05 / certifications',
+      'cert.title': 'certifications()',
+      'cert.subtitle': 'Validated knowledge and professionally recognized skills.',
+      // Contact
+      'contact.eyebrow': '06 / contact',
+      'contact.title': 'contact_me()',
+      'contact.body': "I'm currently available for freelance work or full-time positions. Whether you have a project in mind, a problem to solve, or just want to connect — I'd love to hear from you.",
+      'contact.btn': 'connect_linkedin()',
+      'contact.badge': 'Open to freelance & full-time roles',
+      'contact.available': 'Available for work ✓',
+      // Footer
+      'footer.copy': '// © 2024 Mohamed Hichy. All rights reserved. Built with passion.',
+    },
+    fr: {
+      'nav.about': 'à_propos()',
+      'nav.skills': 'compétences()',
+      'nav.projects': 'projets()',
+      'nav.experience': 'expérience()',
+      'nav.certs': 'certifs()',
+      'nav.contact': 'contact()',
+      'hero.badge': 'Ouvert aux opportunités',
+      'hero.desc': "J'architecture des expériences numériques avec du code propre et efficace, et j'automatise les workflows pour créer des solutions fluides et évolutives.",
+      'hero.cta.contact': 'me_contacter()',
+      'hero.cta.projects': 'voir_projets()',
+      'hero.cta.cv': 'télécharger_cv()',
+      'about.eyebrow': '01 / à propos',
+      'about.title': 'à_propos_de_moi()',
+      'about.subtitle': 'Allier expertise technique et résolution créative des problèmes pour construire des choses qui comptent.',
+      'about.card1.title': 'profil_professionnel()',
+      'about.card1.body': "En tant que Développeur Full Stack expert en codage traditionnel et en solutions low-code innovantes, j'architecture des expériences numériques alliant excellence technique et efficacité opérationnelle.",
+      'about.quote': '"Je transforme des exigences complexes en solutions élégantes qui équilibrent robustesse technique et valeur métier, en garantissant des systèmes maintenables, efficaces et pérennes."',
+      'about.card2.title': 'diplômes_et_formations()',
+      'about.edu1.degree': 'DIPLÔME DE TECHNICIEN SPÉCIALISÉ',
+      'about.edu1.field': 'Technologies Offshoring et Communication IT',
+      'about.edu2.degree': 'BACCALAURÉAT EN SCIENCES PHYSIQUES',
+      'about.edu2.field': 'Sciences physiques avec mention',
+      'about.lang.title': 'maîtrise_des_langues()',
+      'about.focus.title': 'focus_actuel()',
+      'about.focus.body': "Construction de solutions d'automatisation avancées pilotées par l'IA avec n8n, optimisation des workflows et amélioration de l'anglais pour une collaboration internationale fluide.",
+      'about.contact.title': 'informations_contact()',
+      'about.available': 'Disponible pour travailler',
+      'about.linkedin': 'profil_linkedin() →',
+      'skills.eyebrow': '02 / compétences',
+      'skills.title': 'compétences_techniques()',
+      'skills.subtitle': 'Ma boîte à outils complète pour construire des solutions modernes et évolutives.',
+      'projects.eyebrow': '03 / projets',
+      'projects.title': 'projets_en_vedette()',
+      'projects.subtitle': 'Une sélection de travaux qui illustre ce que je construis et ma façon de penser.',
+      'projects.view': 'voir_détails()',
+      'projects.p1.desc': "Conception UI/UX avec Figma pour une plateforme marketplace similaire à Avito.ma avec prototypage interactif complet.",
+      'projects.p2.desc': "Site web affichant les films, horaires et réservation de billets en ligne avec publicités cinéma.",
+      'projects.p3.desc': "Application mobile de gestion des patients, rendez-vous et planning du personnel médical avec mises à jour en temps réel.",
+      'projects.p4.desc': "Boutique en ligne de jeux vidéo avec gestion des commandes et passerelle de paiement intégrée.",
+      'projects.p5.desc': "Workflow automatisé pour le suivi des conteneurs maritimes avec collecte de données, mises à jour de statut et résumés générés par IA.",
+      'projects.p6.desc': "Script d'automatisation de réservation de billets en ligne avec remplissage de formulaires et validation automatique.",
+      'exp.eyebrow': '04 / expérience',
+      'exp.title': 'historique_professionnel()',
+      'exp.subtitle': 'Mon parcours professionnel à travers le paysage technologique.',
+      'exp.current': '● poste_actuel',
+      'exp.past': 'poste_précédent',
+      'exp.intern': 'stage',
+      'exp.crescents.p1': 'Conception et développement de sites web modernes, responsives et performants',
+      'exp.crescents.p2': 'Développement avec React, Next.js, Tailwind CSS et bases de données',
+      'exp.crescents.p3': "Intégration d'API et optimisation de l'expérience utilisateur",
+      'exp.cmh.p1': "Création de templates HTML/CSS/JS pour campagnes e-mail",
+      'exp.cmh.p2': "Gestion et configuration des domaines e-mail",
+      'exp.cmh.p3': "Développement de templates e-mail responsives",
+      'exp.cmh.p4': "Automatisation des workflows e-mail à grande échelle",
+      'exp.cmh.p5': "Optimisation de la délivrabilité des domaines",
+      'exp.med.p1': "Développement du système de gestion hospitalière",
+      'exp.med.p2': "Développement des modules de gestion des patients",
+      'exp.med.p3': "Implémentation d'APIs RESTful pour l'accès aux données",
+      'exp.med.p4': "Tests unitaires et assurance qualité",
+      'cert.eyebrow': '05 / certifications',
+      'cert.title': 'certifications()',
+      'cert.subtitle': 'Connaissances validées et compétences reconnues professionnellement.',
+      'contact.eyebrow': '06 / contact',
+      'contact.title': 'me_contacter()',
+      'contact.body': "Je suis actuellement disponible pour des missions freelance ou des postes à temps plein. Que vous ayez un projet en tête, un problème à résoudre ou simplement envie de vous connecter — je serais ravi d'échanger.",
+      'contact.btn': 'rejoindre_linkedin()',
+      'contact.badge': 'Disponible freelance & temps plein',
+      'contact.available': 'Disponible pour travailler ✓',
+      'footer.copy': '// © 2024 Mohamed Hichy. Tous droits réservés. Fait avec passion.',
+    },
+    ar: {
+      'nav.about': 'عني()',
+      'nav.skills': 'مهاراتي()',
+      'nav.projects': 'مشاريعي()',
+      'nav.experience': 'خبراتي()',
+      'nav.certs': 'شهاداتي()',
+      'nav.contact': 'تواصل()',
+      'hero.badge': 'متاح للفرص المهنية',
+      'hero.desc': 'أبني تجارب رقمية بكود نظيف وفعّال، وأُؤتمت سير العمل لإنشاء حلول سلسة وقابلة للتوسع.',
+      'hero.cta.contact': 'تواصل_معي()',
+      'hero.cta.projects': 'عرض_المشاريع()',
+      'hero.cta.cv': 'تنزيل_السيرة_الذاتية()',
+      'about.eyebrow': '01 / عني',
+      'about.title': 'نبذة_عني()',
+      'about.subtitle': 'أجمع بين الخبرة التقنية وحل المشكلات الإبداعي لبناء أشياء تحدث فرقاً.',
+      'about.card1.title': 'الملف_المهني()',
+      'about.card1.body': 'بصفتي مطور Full Stack متخصص في البرمجة التقليدية والحلول منخفضة الكود، أبني تجارب رقمية تجمع بين التميز التقني والكفاءة التشغيلية.',
+      'about.quote': '"أحوّل المتطلبات المعقدة إلى حلول أنيقة توازن بين المتانة التقنية والقيمة التجارية، مع ضمان أنظمة قابلة للصيانة وفعّالة ومستدامة."',
+      'about.card2.title': 'المؤهلات_الأكاديمية()',
+      'about.edu1.degree': 'دبلوم تقني متخصص',
+      'about.edu1.field': 'تقنيات الاستشارة والتواصل في تكنولوجيا المعلومات',
+      'about.edu2.degree': 'بكالوريا في العلوم الفيزيائية',
+      'about.edu2.field': 'تخصص العلوم الفيزيائية مع مرتبة الشرف',
+      'about.lang.title': 'إتقان_اللغات()',
+      'about.focus.title': 'التركيز_الحالي()',
+      'about.focus.body': 'بناء حلول أتمتة متقدمة مدعومة بالذكاء الاصطناعي باستخدام n8n، وتحسين سير العمل، وتطوير اللغة الإنجليزية للعمل الجماعي العالمي.',
+      'about.contact.title': 'معلومات_التواصل()',
+      'about.available': 'متاح للعمل',
+      'about.linkedin': '→ ملف_لينكدإن()',
+      'skills.eyebrow': '02 / المهارات',
+      'skills.title': 'المهارات_التقنية()',
+      'skills.subtitle': 'مجموعة أدواتي الشاملة لبناء حلول حديثة وقابلة للتوسع.',
+      'projects.eyebrow': '03 / المشاريع',
+      'projects.title': 'المشاريع_المميزة()',
+      'projects.subtitle': 'مختارات من أعمالي تعكس ما أبنيه وكيف أفكر.',
+      'projects.view': 'عرض_التفاصيل()',
+      'projects.p1.desc': 'تصميم واجهة المستخدم UI/UX باستخدام Figma لمنصة سوق إلكتروني مشابهة لـ Avito.ma مع نماذج أولية تفاعلية كاملة.',
+      'projects.p2.desc': 'موقع ويب يعرض الأفلام والمواعيد وحجز التذاكر عبر الإنترنت مع إعلانات السينما.',
+      'projects.p3.desc': 'تطبيق موبايل لإدارة المرضى والمواعيد وجداول طاقم التمريض مع تحديثات فورية.',
+      'projects.p4.desc': 'متجر إلكتروني لألعاب الفيديو مع إدارة الطلبات وبوابة دفع إلكتروني متكاملة.',
+      'projects.p5.desc': 'سير عمل آلي لتتبع الحاويات البحرية مع جمع البيانات وتحديثات الحالة والملخصات المولّدة بالذكاء الاصطناعي.',
+      'projects.p6.desc': 'سكريبت لأتمتة حجز التذاكر عبر الإنترنت مع ملء النماذج والتحقق التلقائي باستخدام أتمتة المتصفح.',
+      'exp.eyebrow': '04 / الخبرة',
+      'exp.title': 'السيرة_المهنية()',
+      'exp.subtitle': 'رحلتي المهنية عبر عالم التكنولوجيا.',
+      'exp.current': '● الوظيفة_الحالية',
+      'exp.past': 'وظيفة_سابقة',
+      'exp.intern': 'تدريب',
+      'exp.crescents.p1': 'تصميم وتطوير مواقع ويب حديثة ومتجاوبة وعالية الأداء',
+      'exp.crescents.p2': 'التطوير باستخدام React وNext.js وTailwind CSS وقواعد البيانات',
+      'exp.crescents.p3': 'دمج واجهات برمجة التطبيقات وتحسين تجربة المستخدم',
+      'exp.cmh.p1': 'إنشاء قوالب HTML/CSS/JS لحملات البريد الإلكتروني',
+      'exp.cmh.p2': 'إدارة وتكوين نطاقات البريد الإلكتروني',
+      'exp.cmh.p3': 'تطوير قوالب بريد إلكتروني متجاوبة',
+      'exp.cmh.p4': 'أتمتة سير عمل البريد الإلكتروني على نطاق واسع',
+      'exp.cmh.p5': 'تحسين إمكانية تسليم النطاقات',
+      'exp.med.p1': 'تطوير نظام إدارة المستشفى',
+      'exp.med.p2': 'تطوير وحدات إدارة المرضى',
+      'exp.med.p3': 'تنفيذ واجهات برمجة RESTful للوصول إلى البيانات',
+      'exp.med.p4': 'إجراء اختبارات الوحدة وضمان الجودة',
+      'cert.eyebrow': '05 / الشهادات',
+      'cert.title': 'الشهادات_والدورات()',
+      'cert.subtitle': 'معرفة معتمدة ومهارات معترف بها مهنياً.',
+      'contact.eyebrow': '06 / تواصل',
+      'contact.title': 'تواصل_معي()',
+      'contact.body': 'أنا حالياً متاح للعمل الحر أو الوظائف بدوام كامل. سواء كان لديك مشروع في ذهنك، أو مشكلة تبحث عن حل، أو ببساطة تريد التواصل — يسعدني سماعك.',
+      'contact.btn': 'تواصل_عبر_لينكدإن()',
+      'contact.badge': 'متاح للعمل الحر والدوام الكامل',
+      'contact.available': 'متاح للعمل ✓',
+      'footer.copy': '// © 2024 محمد الهيشي. جميع الحقوق محفوظة. صُنع بشغف.',
+    }
+  };
+
+  // ─── DOM KEY MAP ──────────────────────────
+  // Maps translation keys to DOM selectors + property
+  const domMap = [
+    // Nav links
+    { key: 'nav.about',    sel: '.nav-links a[data-section="about"], #mobile-drawer a[href="#about"]', prop: 'textContent' },
+    { key: 'nav.skills',   sel: '.nav-links a[data-section="skills"], #mobile-drawer a[href="#skills"]', prop: 'textContent' },
+    { key: 'nav.projects', sel: '.nav-links a[data-section="projects"], #mobile-drawer a[href="#projects"]', prop: 'textContent' },
+    { key: 'nav.experience', sel: '.nav-links a[data-section="experience"], #mobile-drawer a[href="#experience"]', prop: 'textContent' },
+    { key: 'nav.certs',    sel: '.nav-links a[data-section="certifications"], #mobile-drawer a[href="#certifications"]', prop: 'textContent' },
+    { key: 'nav.contact',  sel: '.nav-links a[data-section="contact"], #mobile-drawer a[href="#contact"]', prop: 'textContent' },
+    // Hero
+    { key: 'hero.badge',   sel: '#hero-badge-text', prop: 'textContent' },
+    { key: 'hero.desc',    sel: '#hero-desc', prop: 'textContent' },
+    { key: 'hero.cta.contact', sel: '#hero-cta-contact', prop: 'textContent' },
+    { key: 'hero.cta.projects', sel: '#hero-cta-projects', prop: 'textContent' },
+    { key: 'hero.cta.cv', sel: '#hero-cta-cv', prop: 'textContent' },
+    // Section eyebrows + titles + subtitles
+    { key: 'about.eyebrow', sel: '#about .section-eyebrow', prop: 'textContent' },
+    { key: 'about.title',   sel: '#about .section-title', prop: 'textContent' },
+    { key: 'about.subtitle', sel: '#about .section-desc', prop: 'textContent' },
+    { key: 'about.card1.title', sel: '#about-card1-title', prop: 'textContent' },
+    { key: 'about.card1.body',  sel: '#about-card1-body', prop: 'textContent' },
+    { key: 'about.quote',       sel: '#about-quote', prop: 'textContent' },
+    { key: 'about.card2.title', sel: '#about-card2-title', prop: 'textContent' },
+    { key: 'about.edu1.degree', sel: '#edu1-degree', prop: 'textContent' },
+    { key: 'about.edu1.field',  sel: '#edu1-field', prop: 'textContent' },
+    { key: 'about.edu2.degree', sel: '#edu2-degree', prop: 'textContent' },
+    { key: 'about.edu2.field',  sel: '#edu2-field', prop: 'textContent' },
+    { key: 'about.lang.title',  sel: '#about-lang-title', prop: 'textContent' },
+    { key: 'about.focus.title', sel: '#about-focus-title', prop: 'textContent' },
+    { key: 'about.focus.body',  sel: '#about-focus-body', prop: 'textContent' },
+    { key: 'about.contact.title', sel: '#about-contact-title', prop: 'textContent' },
+    { key: 'about.available',   sel: '#about-available', prop: 'textContent' },
+    { key: 'about.linkedin',    sel: '#about-linkedin', prop: 'textContent' },
+    // Skills
+    { key: 'skills.eyebrow', sel: '#skills .section-eyebrow', prop: 'textContent' },
+    { key: 'skills.title',   sel: '#skills .section-title', prop: 'textContent' },
+    { key: 'skills.subtitle', sel: '#skills .section-desc', prop: 'textContent' },
+    // Projects
+    { key: 'projects.eyebrow', sel: '#projects .section-eyebrow', prop: 'textContent' },
+    { key: 'projects.title',   sel: '#projects .section-title', prop: 'textContent' },
+    { key: 'projects.subtitle', sel: '#projects .section-desc', prop: 'textContent' },
+    { key: 'projects.p1.desc', sel: '#proj-desc-1', prop: 'textContent' },
+    { key: 'projects.p2.desc', sel: '#proj-desc-2', prop: 'textContent' },
+    { key: 'projects.p3.desc', sel: '#proj-desc-3', prop: 'textContent' },
+    { key: 'projects.p4.desc', sel: '#proj-desc-4', prop: 'textContent' },
+    { key: 'projects.p5.desc', sel: '#proj-desc-5', prop: 'textContent' },
+    { key: 'projects.p6.desc', sel: '#proj-desc-6', prop: 'textContent' },
+    // Experience
+    { key: 'exp.eyebrow', sel: '#experience .section-eyebrow', prop: 'textContent' },
+    { key: 'exp.title',   sel: '#experience .section-title', prop: 'textContent' },
+    { key: 'exp.subtitle', sel: '#experience .section-desc', prop: 'textContent' },
+    { key: 'exp.current', sel: '#exp-badge-current', prop: 'textContent' },
+    { key: 'exp.past',    sel: '#exp-badge-past', prop: 'textContent' },
+    { key: 'exp.intern',  sel: '#exp-badge-intern', prop: 'textContent' },
+    { key: 'exp.crescents.p1', sel: '#exp-cr-p1', prop: 'textContent' },
+    { key: 'exp.crescents.p2', sel: '#exp-cr-p2', prop: 'textContent' },
+    { key: 'exp.crescents.p3', sel: '#exp-cr-p3', prop: 'textContent' },
+    { key: 'exp.cmh.p1',  sel: '#exp-cmh-p1', prop: 'textContent' },
+    { key: 'exp.cmh.p2',  sel: '#exp-cmh-p2', prop: 'textContent' },
+    { key: 'exp.cmh.p3',  sel: '#exp-cmh-p3', prop: 'textContent' },
+    { key: 'exp.cmh.p4',  sel: '#exp-cmh-p4', prop: 'textContent' },
+    { key: 'exp.cmh.p5',  sel: '#exp-cmh-p5', prop: 'textContent' },
+    { key: 'exp.med.p1',  sel: '#exp-med-p1', prop: 'textContent' },
+    { key: 'exp.med.p2',  sel: '#exp-med-p2', prop: 'textContent' },
+    { key: 'exp.med.p3',  sel: '#exp-med-p3', prop: 'textContent' },
+    { key: 'exp.med.p4',  sel: '#exp-med-p4', prop: 'textContent' },
+    // Certifications
+    { key: 'cert.eyebrow', sel: '#certifications .section-eyebrow', prop: 'textContent' },
+    { key: 'cert.title',   sel: '#certifications .section-title', prop: 'textContent' },
+    { key: 'cert.subtitle', sel: '#certifications .section-desc', prop: 'textContent' },
+    // Contact
+    { key: 'contact.eyebrow', sel: '#contact .section-eyebrow', prop: 'textContent' },
+    { key: 'contact.title',   sel: '#contact .section-title', prop: 'textContent' },
+    { key: 'contact.body',    sel: '#contact-body', prop: 'textContent' },
+    { key: 'contact.btn',     sel: '#contact-linkedin-btn', prop: 'textContent' },
+    { key: 'contact.badge',   sel: '#contact-badge-text', prop: 'textContent' },
+    { key: 'contact.available', sel: '#contact-status', prop: 'textContent' },
+    // Footer
+    { key: 'footer.copy', sel: '.footer-copy', prop: 'textContent' },
+  ];
+
+  // ─── TYPEWRITER ROLES PER LANG ────────────
+  const rolesByLang = {
+    en: ['Full Stack Developer', 'Automation Engineer', 'Problem Solver', 'UI/UX Enthusiast'],
+    fr: ['Développeur Full Stack', 'Ingénieur Automation', 'Solutionneur de Problèmes', 'Passionné UI/UX'],
+    ar: ['مطور Full Stack', 'مهندس أتمتة', 'حلّال المشكلات', 'متحمس لـ UI/UX'],
+  };
+
+  // ─── APPLY TRANSLATIONS ───────────────────
+  let currentLang = 'en';
+
+  function applyTranslations(lang) {
+    const t = T[lang];
+    domMap.forEach(({ key, sel, prop }) => {
+      if (!t[key]) return;
+      document.querySelectorAll(sel).forEach(el => {
+        if (prop === 'textContent') el.textContent = t[key];
+        else el.setAttribute(prop, t[key]);
+      });
+    });
+    // RTL
+    if (lang === 'ar') {
+      document.body.classList.add('rtl');
+      document.documentElement.setAttribute('lang', 'ar');
+      document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+      document.body.classList.remove('rtl');
+      document.documentElement.setAttribute('lang', lang);
+      document.documentElement.removeAttribute('dir');
+    }
+    // Update typewriter roles
+    if (window._twRoles) window._twRoles = rolesByLang[lang];
+    // Flip project "view_details()" links
+    document.querySelectorAll('.project-link').forEach(el => {
+      const svg = el.querySelector('svg');
+      el.textContent = t['projects.view'] || 'view_details()';
+      if (svg) el.appendChild(svg);
+    });
+  }
+
+  // ─── API TRANSLATION FALLBACK ─────────────
+  const apiCache = {};
+
+  async function translateViaAPI(text, targetLang) {
+    const cacheKey = `${targetLang}:${text}`;
+    if (apiCache[cacheKey]) return apiCache[cacheKey];
+    const langName = targetLang === 'fr' ? 'French' : 'Arabic';
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `Translate the following text to ${langName}. Return ONLY the translated text, nothing else, no quotes, no explanation:\n\n${text}`
+        }]
+      })
+    });
+    const data = await response.json();
+    const translated = data.content?.[0]?.text?.trim() || text;
+    apiCache[cacheKey] = translated;
+    return translated;
+  }
+
+  // ─── SWITCH LANGUAGE ──────────────────────
+  async function switchLang(lang) {
+    if (lang === currentLang) return;
+    currentLang = lang;
+
+    // Update active button
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+
+    // Apply known translations immediately
+    applyTranslations(lang);
+
+    // Check for any missing keys and translate via API
+    const t = T[lang];
+    const missing = domMap.filter(({ key }) => !t[key]);
+    if (missing.length > 0) {
+      const spinner = document.getElementById('translate-spinner');
+      const msg = document.getElementById('translate-msg');
+      spinner.classList.add('show');
+      const langLabel = lang === 'fr' ? 'français' : 'عربي';
+      msg.textContent = `translating to ${langLabel}...`;
+
+      await Promise.all(missing.map(async ({ key, sel, prop }) => {
+        const enText = T.en[key];
+        if (!enText) return;
+        try {
+          const translated = await translateViaAPI(enText, lang);
+          T[lang][key] = translated;
+          document.querySelectorAll(sel).forEach(el => {
+            if (prop === 'textContent') el.textContent = translated;
+          });
+        } catch(e) {}
+      }));
+
+      spinner.classList.remove('show');
+    }
+  }
+
+  // ─── BUILD LANG SWITCHER ──────────────────
+  function buildSwitcher() {
+    const switcher = document.createElement('div');
+    switcher.className = 'lang-switcher';
+    switcher.setAttribute('aria-label', 'Language switcher');
+    ['en', 'fr', 'ar'].forEach((lang, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'lang-btn' + (lang === 'en' ? ' active' : '');
+      btn.dataset.lang = lang;
+      btn.textContent = lang === 'en' ? 'EN' : lang === 'fr' ? 'FR' : 'ع';
+      btn.setAttribute('aria-label', lang === 'en' ? 'English' : lang === 'fr' ? 'Français' : 'العربية');
+      btn.addEventListener('click', () => switchLang(lang));
+      switcher.appendChild(btn);
+    });
+    // Append to nav-inner after nav-links
+    const navInner = document.querySelector('.nav-inner');
+    if (navInner) navInner.appendChild(switcher);
+    // Also add a compact version to mobile drawer top
+    const drawer = document.getElementById('mobile-drawer');
+    if (drawer) {
+      const mobileSwitcher = switcher.cloneNode(true);
+      mobileSwitcher.style.marginBottom = '16px';
+      mobileSwitcher.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchLang(btn.dataset.lang));
+      });
+      drawer.insertBefore(mobileSwitcher, drawer.firstChild);
+    }
+  }
+
+  // ─── ADD IDs TO KEY DOM ELEMENTS ──────────
+  // (needed for domMap selectors — inject after page loads)
+  function addIds() {
+    // Hero
+    const heroBadge = document.querySelector('.hero-badge');
+    if (heroBadge) {
+      const dot = heroBadge.querySelector('.hero-badge-dot');
+      const textNode = [...heroBadge.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
+      if (textNode) {
+        const span = document.createElement('span');
+        span.id = 'hero-badge-text';
+        span.textContent = textNode.textContent.trim();
+        textNode.replaceWith(span);
+      }
+    }
+    const heroDesc = document.querySelector('.hero-desc');
+    if (heroDesc) heroDesc.id = 'hero-desc';
+
+    // Hero CTAs — find by order
+    const ctaBtns = document.querySelectorAll('.hero-ctas a');
+    if (ctaBtns[0]) ctaBtns[0].id = 'hero-cta-contact';
+    if (ctaBtns[1]) ctaBtns[1].id = 'hero-cta-projects';
+    if (ctaBtns[2]) ctaBtns[2].id = 'hero-cta-cv';
+
+    // About cards
+    const aboutCards = document.querySelectorAll('#about .about-card h3');
+    if (aboutCards[0]) aboutCards[0].id = 'about-card1-title';
+    if (aboutCards[1]) aboutCards[1].id = 'about-card2-title';
+    if (aboutCards[2]) aboutCards[2].id = 'about-lang-title';
+    if (aboutCards[3]) aboutCards[3].id = 'about-contact-title';
+
+    const aboutBodyP = document.querySelector('#about .about-card p');
+    if (aboutBodyP) aboutBodyP.id = 'about-card1-body';
+
+    const aboutQuote = document.querySelector('#about .about-card > div[style*="border-left"] p');
+    if (aboutQuote) aboutQuote.id = 'about-quote';
+
+    // Education
+    const eduItems = document.querySelectorAll('.edu-item');
+    if (eduItems[0]) {
+      const h4 = eduItems[0].querySelector('h4');
+      const p = eduItems[0].querySelector('p');
+      if (h4) h4.id = 'edu1-degree';
+      if (p) p.id = 'edu1-field';
+    }
+    if (eduItems[1]) {
+      const h4 = eduItems[1].querySelector('h4');
+      const p = eduItems[1].querySelector('p');
+      if (h4) h4.id = 'edu2-degree';
+      if (p) p.id = 'edu2-field';
+    }
+
+    // Focus & language card
+    const focusTitleEl = document.querySelector('#about .about-card > div[style*="bg-base"] p:first-child');
+    if (focusTitleEl) focusTitleEl.id = 'about-focus-title';
+    const focusBodyEl = document.querySelector('#about .about-card > div[style*="bg-base"] p:last-child');
+    if (focusBodyEl) focusBodyEl.id = 'about-focus-body';
+
+    // Available + linkedin
+    const availableItem = document.querySelector('.contact-item[style*="accent-emerald"]');
+    if (availableItem) {
+      const textNodes = [...availableItem.childNodes].filter(n => n.nodeType === 3);
+      if (textNodes[0]) {
+        const sp = document.createElement('span');
+        sp.id = 'about-available';
+        sp.textContent = textNodes[0].textContent.trim();
+        textNodes[0].replaceWith(sp);
+      }
+    }
+    const linkedinA = document.querySelector('#about .about-card > div[style*="margin-top:20px"] a');
+    if (linkedinA) linkedinA.id = 'about-linkedin';
+
+    // Project descriptions
+    const projDescs = document.querySelectorAll('.project-desc');
+    projDescs.forEach((el, i) => { el.id = `proj-desc-${i + 1}`; });
+
+    // Experience badges
+    const badges = document.querySelectorAll('.timeline-badge');
+    if (badges[0]) badges[0].id = 'exp-badge-current';
+    if (badges[1]) badges[1].id = 'exp-badge-past';
+    if (badges[2]) badges[2].id = 'exp-badge-intern';
+
+    // Experience bullet points
+    const allPoints = document.querySelectorAll('.timeline-points li');
+    let idx = 0;
+    // Crescents: 3 bullets
+    ['exp-cr-p1','exp-cr-p2','exp-cr-p3'].forEach(id => { if (allPoints[idx]) allPoints[idx++].id = id; });
+    // CMH: 5 bullets
+    ['exp-cmh-p1','exp-cmh-p2','exp-cmh-p3','exp-cmh-p4','exp-cmh-p5'].forEach(id => { if (allPoints[idx]) allPoints[idx++].id = id; });
+    // Mediacris: 4 bullets
+    ['exp-med-p1','exp-med-p2','exp-med-p3','exp-med-p4'].forEach(id => { if (allPoints[idx]) allPoints[idx++].id = id; });
+
+    // Contact section
+    const contactBodyP = document.querySelector('.contact-info-side p');
+    if (contactBodyP) contactBodyP.id = 'contact-body';
+    const contactBtn = document.querySelector('.btn-linkedin');
+    if (contactBtn) contactBtn.id = 'contact-linkedin-btn';
+
+    // Contact terminal lines — find status line
+    const tStatus = document.querySelector('.t-status');
+    if (tStatus) tStatus.id = 'contact-status';
+    const availBadge = document.querySelector('.available-badge');
+    if (availBadge) {
+      const textNodes = [...availBadge.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim());
+      if (textNodes[0]) {
+        const sp = document.createElement('span');
+        sp.id = 'contact-badge-text';
+        sp.textContent = textNodes[0].textContent.trim();
+        textNodes[0].replaceWith(sp);
+      }
+    }
+  }
+
+  // ─── INIT ─────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    addIds();
+    buildSwitcher();
+  });
+
+  // Also expose twRoles globally for typewriter update
+  window._twRoles = rolesByLang.en;
+  // Patch typewriter to use window._twRoles
+  // (original typewriter is already running, we reload it here)
+  setTimeout(() => {
+    const twTextEl = document.getElementById('tw-text');
+    if (!twTextEl) return;
+    let rIdx = 0, cIdx = 0, del = false;
+    function tw() {
+      const roles = window._twRoles || rolesByLang.en;
+      const cur = roles[rIdx % roles.length];
+      if (!del) {
+        twTextEl.textContent = cur.slice(0, ++cIdx);
+        if (cIdx === cur.length) { del = true; setTimeout(tw, 1800); return; }
+      } else {
+        twTextEl.textContent = cur.slice(0, --cIdx);
+        if (cIdx === 0) { del = false; rIdx = (rIdx + 1) % roles.length; }
+      }
+      setTimeout(tw, del ? 50 : 80);
+    }
+    tw();
+  }, 2400);
+
+})();
+</script>
 </body>
 </html>
