@@ -2,9 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mohamed Hichy | Full Stack Developer</title>
+  <meta name="description" content="Mohamed Hichy — Full Stack Developer & Automation Engineer based in Tanger, Morocco. Building with React, Next.js, Node.js, Laravel, and n8n automation.">
+  <meta name="theme-color" content="#0A0E1A">
+  <meta name="author" content="Mohamed Hichy">
+  <meta name="keywords" content="Mohamed Hichy, Full Stack Developer, Automation Engineer, React, Next.js, Node.js, Laravel, n8n, Tanger, Morocco">
+  <meta name="robots" content="index, follow">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mohamed Hichy | Full Stack Developer">
+  <meta property="og:description" content="Full Stack Developer & Automation Engineer based in Tanger, Morocco. Building with React, Next.js, Node.js, Laravel, and n8n automation.">
+  <meta property="og:image" content="img/hichy.png">
+  <meta property="og:locale" content="en_US">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mohamed Hichy | Full Stack Developer">
+  <meta name="twitter:description" content="Full Stack Developer & Automation Engineer based in Tanger, Morocco.">
+  <meta name="twitter:image" content="img/hichy.png">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230A0E1A'/><text x='50' y='68' font-size='60' font-family='monospace' fill='%234F8EF7' text-anchor='middle'>{}</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
@@ -47,6 +65,40 @@
     }
 
     ::selection { background: rgba(79,142,247,0.3); color: var(--text-primary); }
+
+    /* ─── ACCESSIBILITY: SKIP LINK + FOCUS ────── */
+    .skip-link {
+      position: absolute; left: -999px; top: 0; z-index: 10000;
+      background: var(--accent-primary); color: #fff; padding: 10px 18px;
+      font-family: 'Fira Code', monospace; font-size: 0.8rem; text-decoration: none;
+      border-radius: 0 0 8px 0;
+    }
+    .skip-link:focus { left: 0; }
+    a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+      outline: 2px solid var(--accent-secondary); outline-offset: 3px; border-radius: 4px;
+    }
+
+    /* ─── REDUCED MOTION ───────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+      .reveal, .reveal-left, .reveal-right { opacity: 1 !important; transform: none !important; }
+      #cursor-glow, #cursor-dot { display: none !important; }
+      body { cursor: auto; }
+    }
+
+    /* ─── PRINT STYLES ─────────────────────────── */
+    @media print {
+      #cursor-glow, #cursor-dot, #scroll-progress, #page-skeleton, nav#navbar,
+      #mobile-overlay, #mobile-drawer, #particle-canvas, .hero-orb, .skip-link,
+      .lang-switcher { display: none !important; }
+      body { cursor: auto; background: #fff; color: #111; }
+      section { padding: 24px 0; page-break-inside: avoid; }
+      .hero-name-shimmer { -webkit-text-fill-color: #111; color: #111; background: none; }
+      .about-card, .skill-card, .project-card, .timeline-card, .cert-card, .contact-terminal {
+        background: #f5f5f5; border: 1px solid #ccc; box-shadow: none; color: #111;
+      }
+      a { color: #1a4fb4; }
+    }
 
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--bg-base); }
@@ -754,9 +806,20 @@
       .cert-grid { grid-template-columns: 1fr; }
       .contact-grid { grid-template-columns: 1fr; }
     }
+    @media (max-width: 400px) {
+      .hero-photo-ring { width: 200px; height: 250px; }
+      .hero-floating-tag { font-size: 0.62rem; padding: 6px 10px; }
+      .hero-floating-tag:nth-child(2) { left: -6px; }
+      .hero-floating-tag:nth-child(3) { right: -6px; }
+      .hero-floating-tag:nth-child(4) { left: -2px; }
+      .hero-ctas { flex-direction: column; width: 100%; }
+      .hero-ctas a { width: 100%; justify-content: center; }
+    }
   </style>
 </head>
 <body>
+
+<a href="#hero" class="skip-link">Skip to content</a>
 
 <!-- Skeleton loader -->
 <div id="page-skeleton">
@@ -782,7 +845,7 @@
       <li><a href="#certifications" data-section="certifications">certs()</a></li>
       <li><a href="#contact" data-section="contact">contact()</a></li>
     </ul>
-    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -846,7 +909,7 @@
     <div class="hero-photo-wrap">
       <div class="hero-photo-ring">
         <div class="hero-photo-inner">
-          <img src="img/hichy.png" alt="Mohamed Hichy" loading="lazy">
+          <img src="img/hichy.png" alt="Mohamed Hichy" fetchpriority="high" decoding="async">
           <div class="hero-photo-overlay"></div>
         </div>
         <div class="hero-floating-tag" style="top:20px;left:-30px">React.js</div>
@@ -954,7 +1017,7 @@
             </div>
           </div>
           <div style="margin-top:20px">
-            <a href="https://www.linkedin.com/in/medhichy07/" target="_blank" style="font-family:'Fira Code',monospace;font-size:0.75rem;color:var(--accent-primary);text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:gap 0.2s ease" onmouseover="this.style.gap='14px'" onmouseout="this.style.gap='8px'">
+            <a href="https://www.linkedin.com/in/medhichy07/" target="_blank" rel="noopener noreferrer" style="font-family:'Fira Code',monospace;font-size:0.75rem;color:var(--accent-primary);text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:gap 0.2s ease" onmouseover="this.style.gap='14px'" onmouseout="this.style.gap='8px'">
               <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
               linkedin_profile() →
             </a>
@@ -1083,7 +1146,7 @@
     </div>
 
     <div class="projects-grid">
-      <a href="https://www.figma.com/proto/qkgIrymYJkmoOanMTWWiix/Mini-projet-Figma-version-final?page-id=0%3A1&node-id=2-4&viewport=747%2C490%2C0.08&t=46FGrauYhckMKrpM-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=79%3A1240" target="_blank" class="project-card reveal" style="transition-delay:0.05s">
+      <a href="https://www.figma.com/proto/qkgIrymYJkmoOanMTWWiix/Mini-projet-Figma-version-final?page-id=0%3A1&node-id=2-4&viewport=747%2C490%2C0.08&t=46FGrauYhckMKrpM-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=79%3A1240" target="_blank" rel="noopener noreferrer" class="project-card reveal" style="transition-delay:0.05s">
         <div class="project-img-wrap">
           <img src="img/image6.png" alt="Mango Platform" loading="lazy">
           <div class="project-shimmer"></div>
@@ -1097,7 +1160,7 @@
         </div>
       </a>
 
-      <a href="https://mohamedhichy11.github.io/Mini_projet_Cinema/" target="_blank" class="project-card reveal" style="transition-delay:0.1s">
+      <a href="https://mohamedhichy11.github.io/Mini_projet_Cinema/" target="_blank" rel="noopener noreferrer" class="project-card reveal" style="transition-delay:0.1s">
         <div class="project-img-wrap">
           <img src="img/image.png" alt="Cinema Website" loading="lazy">
           <div class="project-shimmer"></div>
@@ -1111,7 +1174,7 @@
         </div>
       </a>
 
-      <a href="#" class="project-card reveal" style="transition-delay:0.15s">
+      <a class="project-card reveal" style="transition-delay:0.15s" aria-disabled="true" title="Private repository — code available on request">
         <div class="project-img-wrap">
           <img src="img/image5.png" alt="Hospital Management" loading="lazy">
           <div class="project-shimmer"></div>
@@ -1125,7 +1188,7 @@
         </div>
       </a>
 
-      <a href="#" class="project-card reveal" style="transition-delay:0.2s">
+      <a class="project-card reveal" style="transition-delay:0.2s" aria-disabled="true" title="Private repository — code available on request">
         <div class="project-img-wrap">
           <img src="img/image4.png" alt="Game Store" loading="lazy">
           <div class="project-shimmer"></div>
@@ -1139,7 +1202,7 @@
         </div>
       </a>
 
-      <a href="https://www.cargobrew.co/" target="_blank" class="project-card reveal" style="transition-delay:0.25s">
+      <a href="https://www.cargobrew.co/" target="_blank" rel="noopener noreferrer" class="project-card reveal" style="transition-delay:0.25s">
         <div class="project-img-wrap">
           <img src="img/image2.png" alt="Cargo Tracking" loading="lazy">
           <div class="project-shimmer"></div>
@@ -1153,7 +1216,7 @@
         </div>
       </a>
 
-      <a href="https://automa.site/workflow/Jzm_NfrYfHaNhn1eIZwiD" target="_blank" class="project-card reveal" style="transition-delay:0.3s">
+      <a href="https://automa.site/workflow/Jzm_NfrYfHaNhn1eIZwiD" target="_blank" rel="noopener noreferrer" class="project-card reveal" style="transition-delay:0.3s">
         <div class="project-img-wrap">
           <img src="img/image3.png" alt="Booking Automation" loading="lazy">
           <div class="project-shimmer"></div>
@@ -1163,6 +1226,34 @@
           <div class="project-title">booking_automation()</div>
           <div class="project-desc">Script to automate online ticket booking with form filling and automatic validation using browser automation.</div>
           <div class="project-tags"><span class="project-tag">Automa</span><span class="project-tag">JavaScript</span><span class="project-tag">Browser Automation</span></div>
+          <span class="project-link">view_details() <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></span>
+        </div>
+      </a>
+
+      <a href="https://hichy-tools.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-card reveal" style="transition-delay:0.35s">
+        <div class="project-img-wrap">
+          <img src="img/image8.png" alt="Web Tools Automation Platform" loading="lazy">
+          <div class="project-shimmer"></div>
+          <div class="project-gradient-border"></div>
+        </div>
+        <div class="project-body">
+          <div class="project-title">web_tools_platform()</div>
+          <div class="project-desc">Suite of 12 browser-based web tools (DNS, DMARC, IP conversion, file processing), built entirely in vanilla HTML/CSS/JavaScript for CMH.</div>
+          <div class="project-tags"><span class="project-tag">HTML5</span><span class="project-tag">CSS3</span><span class="project-tag">Vanilla JS</span></div>
+          <span class="project-link">view_details() <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></span>
+        </div>
+      </a>
+
+      <a href="https://extractions-wmn2.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-card reveal" style="transition-delay:0.4s">
+        <div class="project-img-wrap">
+          <img src="img/image7.png" alt="Email Analysis Dashboard" loading="lazy">
+          <div class="project-shimmer"></div>
+          <div class="project-gradient-border"></div>
+        </div>
+        <div class="project-body">
+          <div class="project-title">email_analysis_dashboard()</div>
+          <div class="project-desc">Web platform for auditing Gmail inboxes via App Password, extracting sender IPs/domains and verifying SPF/DKIM/DMARC, for CMH.</div>
+          <div class="project-tags"><span class="project-tag">Next.js</span><span class="project-tag">React</span><span class="project-tag">Tailwind CSS</span></div>
           <span class="project-link">view_details() <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></span>
         </div>
       </a>
@@ -1187,7 +1278,7 @@
         <div class="timeline-dot"></div>
         <div class="timeline-card">
           <div class="timeline-badge badge-current">● current_position</div>
-          <div class="timeline-title">développeurFullStack — CRESCENTS</div>
+          <div class="timeline-title">développeur Full Stack — CRESCENTS</div>
           <div class="timeline-meta">Avril 2026 – à ce jour</div>
           <ul class="timeline-points">
             <li>Conception et développement de sites web modernes, responsives et performants</li>
@@ -1206,11 +1297,11 @@
         <div class="timeline-card">
           <div class="timeline-badge badge-past">past_position</div>
           <div class="timeline-title">
-            <a href="https://www.linkedin.com/in/medhichy07/edit/forms/position/2911984320/" target="_blank"
+            <a href="https://www.linkedin.com/in/medhichy07/edit/forms/position/2911984320/" target="_blank" rel="noopener noreferrer"
                style="color:inherit;text-decoration:none;border-bottom:1px dashed var(--border-accent);padding-bottom:1px;transition:color 0.2s ease,border-color 0.2s ease"
                onmouseover="this.style.color='var(--accent-primary)';this.style.borderColor='var(--accent-primary)'"
                onmouseout="this.style.color='inherit';this.style.borderColor='var(--border-accent)'">
-              développementWeb — CMH
+              développeur automatisation & emailing — CMH
             </a>
           </div>
           <div class="timeline-meta">Août 2024 – Mai 2026</div>
@@ -1232,7 +1323,7 @@
         <div class="timeline-dot" style="border-color:var(--accent-secondary);box-shadow:0 0 12px rgba(34,211,238,0.3)"></div>
         <div class="timeline-card">
           <div class="timeline-badge badge-intern">internship</div>
-          <div class="timeline-title">developerIntern — MEDIACRIS</div>
+          <div class="timeline-title">developer Intern — MEDIACRIS</div>
           <div class="timeline-meta">April 2024 – May 2024</div>
           <ul class="timeline-points">
             <li>Hospital management system development</li>
@@ -1359,7 +1450,7 @@
         <p>
           I'm currently available for freelance work or full-time positions. Whether you have a project in mind, a problem to solve, or just want to connect — I'd love to hear from you.
         </p>
-        <a href="https://www.linkedin.com/in/medhichy07/" target="_blank" class="btn-linkedin">
+        <a href="https://www.linkedin.com/in/medhichy07/" target="_blank" rel="noopener noreferrer" class="btn-linkedin">
           <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
           connect_linkedin()
         </a>
@@ -1372,14 +1463,14 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-socials">
-      <a href="https://www.linkedin.com/in/medhichy07/" target="_blank" aria-label="LinkedIn">
+      <a href="https://www.linkedin.com/in/medhichy07/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
         <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
       </a>
-      <a href="https://github.com/mohamedhichy11" target="_blank" aria-label="GitHub">
+      <a href="https://github.com/mohamedhichy11" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
         <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
       </a>
     </div>
-    <div class="footer-copy">// © 2024 Mohamed Hichy. All rights reserved. Built with passion.</div>
+    <div class="footer-copy">// © <span id="copy-year">2026</span> Mohamed Hichy. All rights reserved. Built with passion.</div>
   </div>
 </footer>
 
@@ -1394,6 +1485,10 @@
     }, 600);
   });
 
+  // ─── FOOTER YEAR ───────────────────────────
+  const copyYearEl = document.getElementById('copy-year');
+  if (copyYearEl) copyYearEl.textContent = new Date().getFullYear();
+
   // ─── CUSTOM CURSOR ────────────────────────
   const cursorGlow = document.getElementById('cursor-glow');
   const cursorDot = document.getElementById('cursor-dot');
@@ -1404,7 +1499,7 @@
     mx = e.clientX; my = e.clientY;
     cursorDot.style.left = mx + 'px';
     cursorDot.style.top = my + 'px';
-  });
+  }, { passive: true });
 
   function animateCursor() {
     gx += (mx - gx) * 0.12;
@@ -1465,11 +1560,13 @@
     hamburger.classList.remove('open');
     overlay.classList.remove('open');
     drawer.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
   }
   hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('open');
+    const isOpen = hamburger.classList.toggle('open');
     overlay.classList.toggle('open');
     drawer.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', String(isOpen));
   });
   overlay.addEventListener('click', closeDrawer);
   drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
@@ -1477,7 +1574,10 @@
   // ─── SMOOTH SCROLL ────────────────────────
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
+      const href = a.getAttribute('href');
+      if (!href || href === '#') return;
+      let target;
+      try { target = document.querySelector(href); } catch (err) { return; }
       if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     });
   });
@@ -1552,7 +1652,13 @@
     canvas.height = document.getElementById('hero').offsetHeight;
   }
   resize();
-  window.addEventListener('resize', resize, { passive: true });
+  let resizeTick = false;
+  window.addEventListener('resize', () => {
+    if (!resizeTick) {
+      requestAnimationFrame(() => { resize(); resizeTick = false; });
+      resizeTick = true;
+    }
+  }, { passive: true });
 
   class Particle {
     constructor() { this.reset(); }
@@ -1578,18 +1684,38 @@
     }
   }
 
-  for (let i = 0; i < 60; i++) particles.push(new Particle());
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const particleCount = prefersReducedMotion ? 0 : (window.innerWidth < 600 ? 25 : 60);
+  for (let i = 0; i < particleCount; i++) particles.push(new Particle());
 
   function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach(p => { p.update(); p.draw(); });
     requestAnimationFrame(animateParticles);
   }
-  animateParticles();
+  if (!prefersReducedMotion) animateParticles();
 
   // ─── STAGGER DELAYS ───────────────────────
   document.querySelectorAll('.cert-grid .cert-card').forEach((el, i) => {
     el.style.transitionDelay = (i * 0.07) + 's';
+  });
+
+  // ─── TOOLTIP VIEWPORT CLAMP ────────────────
+  document.querySelectorAll('.skill-badge').forEach(badge => {
+    const tip = badge.querySelector('.tooltip');
+    if (!tip) return;
+    badge.addEventListener('mouseenter', () => {
+      tip.style.left = '50%'; tip.style.transform = 'translateX(-50%)';
+      const rect = tip.getBoundingClientRect();
+      const margin = 8;
+      if (rect.left < margin) {
+        const shift = margin - rect.left;
+        tip.style.transform = `translateX(calc(-50% + ${shift}px))`;
+      } else if (rect.right > window.innerWidth - margin) {
+        const shift = rect.right - (window.innerWidth - margin);
+        tip.style.transform = `translateX(calc(-50% - ${shift}px))`;
+      }
+    });
   });
 
 })();
@@ -1634,31 +1760,7 @@
   body.rtl .contact-item { flex-direction: row-reverse; }
   body.rtl #mobile-drawer { right: auto; left: -300px; border-left: none; border-right: 1px solid var(--border-accent); }
   body.rtl #mobile-drawer.open { left: 0; right: auto; }
-
-  /* Translation loading overlay */
-  .translate-spinner {
-    position: fixed; bottom: 24px; right: 24px; z-index: 9000;
-    background: var(--bg-elevated); border: 1px solid var(--border-accent);
-    border-radius: var(--radius-md); padding: 12px 18px;
-    font-family: 'Fira Code', monospace; font-size: 0.75rem; color: var(--accent-primary);
-    display: none; align-items: center; gap: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  }
-  .translate-spinner.show { display: flex; }
-  .spinner-dot {
-    width: 8px; height: 8px; border-radius: 50%; background: var(--accent-primary);
-    animation: spinDot 1.2s ease-in-out infinite;
-  }
-  @keyframes spinDot {
-    0%,100% { transform: scale(0.4); opacity: 0.3; }
-    50% { transform: scale(1); opacity: 1; }
-  }
 </style>
-
-<div class="translate-spinner" id="translate-spinner">
-  <div class="spinner-dot"></div>
-  <span id="translate-msg">translating...</span>
-</div>
 
 <script>
 (function() {
@@ -1714,6 +1816,8 @@
       'projects.p4.desc': 'Online store for video games with order management and integrated online payment gateway.',
       'projects.p5.desc': 'Automated workflow for tracking shipping containers with data collection, status updates, and AI-generated summaries.',
       'projects.p6.desc': 'Script to automate online ticket booking with form filling and automatic validation using browser automation.',
+      'projects.p7.desc': 'Suite of 12 browser-based web tools (DNS, DMARC, IP conversion, file processing), built entirely in vanilla HTML/CSS/JavaScript for CMH.',
+      'projects.p8.desc': 'Web platform for auditing Gmail inboxes via App Password, extracting sender IPs/domains and verifying SPF/DKIM/DMARC, for CMH.',
       // Experience
       'exp.eyebrow': '04 / experience',
       'exp.title': 'work_history()',
@@ -1745,7 +1849,7 @@
       'contact.badge': 'Open to freelance & full-time roles',
       'contact.available': 'Available for work ✓',
       // Footer
-      'footer.copy': '// © 2024 Mohamed Hichy. All rights reserved. Built with passion.',
+      'footer.copy': '// © {YEAR} Mohamed Hichy. All rights reserved. Built with passion.',
     },
     fr: {
       'nav.about': 'à_propos()',
@@ -1789,6 +1893,8 @@
       'projects.p4.desc': "Boutique en ligne de jeux vidéo avec gestion des commandes et passerelle de paiement intégrée.",
       'projects.p5.desc': "Workflow automatisé pour le suivi des conteneurs maritimes avec collecte de données, mises à jour de statut et résumés générés par IA.",
       'projects.p6.desc': "Script d'automatisation de réservation de billets en ligne avec remplissage de formulaires et validation automatique.",
+      'projects.p7.desc': "Suite de 12 outils web browser-based (DNS, DMARC, conversion IP, traitement de fichiers), entièrement en HTML/CSS/JavaScript vanilla pour CMH.",
+      'projects.p8.desc': "Plateforme web pour l'audit de boîtes Gmail via App Password, avec extraction des IPs/domaines expéditeurs et vérification SPF/DKIM/DMARC, pour CMH.",
       'exp.eyebrow': '04 / expérience',
       'exp.title': 'historique_professionnel()',
       'exp.subtitle': 'Mon parcours professionnel à travers le paysage technologique.',
@@ -1816,7 +1922,7 @@
       'contact.btn': 'rejoindre_linkedin()',
       'contact.badge': 'Disponible freelance & temps plein',
       'contact.available': 'Disponible pour travailler ✓',
-      'footer.copy': '// © 2024 Mohamed Hichy. Tous droits réservés. Fait avec passion.',
+      'footer.copy': '// © {YEAR} Mohamed Hichy. Tous droits réservés. Fait avec passion.',
     },
     ar: {
       'nav.about': 'عني()',
@@ -1860,6 +1966,8 @@
       'projects.p4.desc': 'متجر إلكتروني لألعاب الفيديو مع إدارة الطلبات وبوابة دفع إلكتروني متكاملة.',
       'projects.p5.desc': 'سير عمل آلي لتتبع الحاويات البحرية مع جمع البيانات وتحديثات الحالة والملخصات المولّدة بالذكاء الاصطناعي.',
       'projects.p6.desc': 'سكريبت لأتمتة حجز التذاكر عبر الإنترنت مع ملء النماذج والتحقق التلقائي باستخدام أتمتة المتصفح.',
+      'projects.p7.desc': 'مجموعة من 12 أداة ويب تعمل عبر المتصفح (DNS، DMARC، تحويل IP، معالجة الملفات)، مبنية بالكامل بـ HTML/CSS/JavaScript خام لشركة CMH.',
+      'projects.p8.desc': 'منصة ويب لتدقيق صناديق Gmail عبر App Password، مع استخراج عناوين IP والنطاقات المرسلة والتحقق من SPF/DKIM/DMARC، لشركة CMH.',
       'exp.eyebrow': '04 / الخبرة',
       'exp.title': 'السيرة_المهنية()',
       'exp.subtitle': 'رحلتي المهنية عبر عالم التكنولوجيا.',
@@ -1887,7 +1995,7 @@
       'contact.btn': 'تواصل_عبر_لينكدإن()',
       'contact.badge': 'متاح للعمل الحر والدوام الكامل',
       'contact.available': 'متاح للعمل ✓',
-      'footer.copy': '// © 2024 محمد الهيشي. جميع الحقوق محفوظة. صُنع بشغف.',
+      'footer.copy': '// © {YEAR} محمد الهيشي. جميع الحقوق محفوظة. صُنع بشغف.',
     }
   };
 
@@ -1939,6 +2047,8 @@
     { key: 'projects.p4.desc', sel: '#proj-desc-4', prop: 'textContent' },
     { key: 'projects.p5.desc', sel: '#proj-desc-5', prop: 'textContent' },
     { key: 'projects.p6.desc', sel: '#proj-desc-6', prop: 'textContent' },
+    { key: 'projects.p7.desc', sel: '#proj-desc-7', prop: 'textContent' },
+    { key: 'projects.p8.desc', sel: '#proj-desc-8', prop: 'textContent' },
     // Experience
     { key: 'exp.eyebrow', sel: '#experience .section-eyebrow', prop: 'textContent' },
     { key: 'exp.title',   sel: '#experience .section-title', prop: 'textContent' },
@@ -1985,11 +2095,13 @@
 
   function applyTranslations(lang) {
     const t = T[lang];
+    const currentYear = String(new Date().getFullYear());
     domMap.forEach(({ key, sel, prop }) => {
       if (!t[key]) return;
+      const value = t[key].replace('{YEAR}', currentYear);
       document.querySelectorAll(sel).forEach(el => {
-        if (prop === 'textContent') el.textContent = t[key];
-        else el.setAttribute(prop, t[key]);
+        if (prop === 'textContent') el.textContent = value;
+        else el.setAttribute(prop, value);
       });
     });
     // RTL
@@ -2012,66 +2124,16 @@
     });
   }
 
-  // ─── API TRANSLATION FALLBACK ─────────────
-  const apiCache = {};
-
-  async function translateViaAPI(text, targetLang) {
-    const cacheKey = `${targetLang}:${text}`;
-    if (apiCache[cacheKey]) return apiCache[cacheKey];
-    const langName = targetLang === 'fr' ? 'French' : 'Arabic';
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `Translate the following text to ${langName}. Return ONLY the translated text, nothing else, no quotes, no explanation:\n\n${text}`
-        }]
-      })
-    });
-    const data = await response.json();
-    const translated = data.content?.[0]?.text?.trim() || text;
-    apiCache[cacheKey] = translated;
-    return translated;
-  }
-
   // ─── SWITCH LANGUAGE ──────────────────────
-  async function switchLang(lang) {
-    if (lang === currentLang) return;
+  function switchLang(lang) {
+    if (lang === currentLang || !T[lang]) return;
     currentLang = lang;
 
     // Update active button
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
 
-    // Apply known translations immediately
+    // Apply translations
     applyTranslations(lang);
-
-    // Check for any missing keys and translate via API
-    const t = T[lang];
-    const missing = domMap.filter(({ key }) => !t[key]);
-    if (missing.length > 0) {
-      const spinner = document.getElementById('translate-spinner');
-      const msg = document.getElementById('translate-msg');
-      spinner.classList.add('show');
-      const langLabel = lang === 'fr' ? 'français' : 'عربي';
-      msg.textContent = `translating to ${langLabel}...`;
-
-      await Promise.all(missing.map(async ({ key, sel, prop }) => {
-        const enText = T.en[key];
-        if (!enText) return;
-        try {
-          const translated = await translateViaAPI(enText, lang);
-          T[lang][key] = translated;
-          document.querySelectorAll(sel).forEach(el => {
-            if (prop === 'textContent') el.textContent = translated;
-          });
-        } catch(e) {}
-      }));
-
-      spinner.classList.remove('show');
-    }
   }
 
   // ─── BUILD LANG SWITCHER ──────────────────
